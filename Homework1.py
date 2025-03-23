@@ -17,7 +17,7 @@ class Student:
             return "оценок пока нет"
 
     def rate_hw(self, lecturer, course, grade):
-        if isinstance(lecturer, Lecturer) and course in self.courses_in_progress and course in mentor.courses_attached:
+        if isinstance(lecturer, Lecturer) and course in self.courses_in_progress and course in lecturer.courses_attached:
             if course in lecturer.grades:
                 lecturer.grades[course] += [grade]
             else:
@@ -107,3 +107,59 @@ class Reviewer(Mentor):
 
     def __str__(self):
         return f'Имя: {self.name}\nФамилия: {self.surname}'
+
+def mean_all_stud(stud_list,name_course):
+    stud_all=[gr_all for s in stud_list for gr_all in s.grades.get(name_course)]
+    return sum(stud_all)/len(stud_all)
+def mean_all_lect(lect_list,name_course):
+    lect_all=[gr_all for s in lect_list for gr_all in s.grades.get(name_course)]
+    return sum(lect_all)/len(lect_all)
+
+student1 = Student('Василий','Золо','мужчина')
+student1.courses_in_progress += ["Основы программирования","Git","ООП"]
+student1.finished_courses += ["Java разработка"]
+
+student2 = Student('Ирина','Пономарёва','женщина')
+student2.courses_in_progress += ["Git","ООП","Внутренний баланс"]
+student2.finished_courses += ["Основы программирования","Java разработка"]
+
+lecturer1 = Lecturer('Том','Харди')
+lecturer1.courses_attached += ["Git","ООП","Внутренний баланс"]
+student1.rate_hw(lecturer1,"ООП",10)
+
+lecturer2 = Lecturer('Рик','Санчез')
+lecturer2.courses_attached += ["Git","ООП","Внутренний баланс","Современная философия"]
+student2.rate_hw(lecturer2,"ООП",6)
+
+reviewer1 = Reviewer('Катя','Масалова')
+reviewer1.courses_attached += ["Git","ООП","Внутренний баланс","Основы программирования"]
+reviewer1.rate_hw(student1,"Основы программирования",9)
+reviewer1.rate_hw(student2,"Git",5)
+reviewer1.rate_hw(student2,"ООП",7)
+
+reviewer2 = Reviewer('Кристина','Балоян')
+reviewer2.courses_attached += ["Git","ООП","Внутренний баланс","Основы программирования"]
+reviewer2.rate_hw(student2,"Внутренний баланс",3)
+reviewer2.rate_hw(student1,"ООП",5)
+
+print(student1)
+print(student1.mean_g())
+print(student2)
+print(student2.mean_g())
+print(student1 == student2)
+print(student1 < student2)
+print(student1 > student2)
+
+print(lecturer1)
+print(lecturer1.mean_g())
+print(lecturer2)
+print(lecturer2.mean_g())
+print(lecturer1 != lecturer2)
+print(lecturer1 <= lecturer2)
+print(lecturer1 >= lecturer2)
+
+print(reviewer1)
+print(reviewer2)
+
+print(mean_all_stud([student1,student2],'ООП'))
+print(mean_all_lect([lecturer1,lecturer2],'ООП'))
